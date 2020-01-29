@@ -28,6 +28,9 @@ public class Drivetrain
     private TalonSRX rightTop;
     public static ADIS16448_IMU gyro;
 
+    double joyRight;
+    double joyLeft;
+
     Drivetrain(TalonSRX leftFront, TalonSRX leftBack, TalonSRX leftTop, TalonSRX rightFront, TalonSRX rightBack, TalonSRX rightTop)
     {
         this.leftFront = leftFront;
@@ -92,8 +95,10 @@ public class Drivetrain
         leftTop.set(ControlMode.PercentOutput, 0);
     }
 
-    public void control1Stick(double joyY, double joyX)
+    public void control1Stick(XboxController controller)
     {
+        double joyY = controller.getY(Hand.kRight);
+        double joyX = controller.getX(Hand.kRight);
         if(Math.abs(joyY) < .2 && Math.abs(joyX) < .2)
         {
             stopAll();
@@ -105,8 +110,10 @@ public class Drivetrain
         }
     }
 
-    public void controlFallback2Stick(double joyLeft, double joyRight)
+    public void controlFallback2Stick(XboxController controller)
     {
+        joyRight = controller.getY(Hand.kRight);
+        joyLeft = controller.getY(Hand.kLeft);
         if(Math.abs(joyRight) < .2 && Math.abs(joyLeft) < .2)
         {
             stopAll();
@@ -118,33 +125,35 @@ public class Drivetrain
         }
     }
 
-    public void controlStraight2StickVelocity(double joyLeft, double joyRight)
+    public void controlStraight2StickVelocity(XboxController controller)
     {
         double targetUPer100ms;
+        joyRight = controller.getY(Hand.kRight);
+        joyLeft = controller.getY(Hand.kLeft);
         if(Math.abs(joyRight) < .2 && Math.abs(joyLeft) < .2)
         {
             stopAll();
         }
         else
         {
-            /*if(Math.abs(joyLeft - joyRight) < .20)
-            {*/
+            if(Math.abs(joyLeft - joyRight) < .20)
+            {
                 targetUPer100ms = (((joyLeft)) * 5330 * 80) / 600;
                 setSideVeloc('r', targetUPer100ms);
                 setSideVeloc('l', targetUPer100ms);
-            /*}
+            }
             else
             {
                 setSidePower('r', joyRight);
                 setSidePower('l', joyLeft);
-            }*/
+            }
         }
     }
 
     public void controlStraight2StickGyro(XboxController controller)
     {
-        double joyRight = controller.getY(Hand.kRight);
-        double joyLeft = controller.getY(Hand.kLeft);
+        joyRight = controller.getY(Hand.kRight);
+        joyLeft = controller.getY(Hand.kLeft);
         if(Math.abs(joyRight) < .2 && Math.abs(joyLeft) < .2)
         {
             stopAll();

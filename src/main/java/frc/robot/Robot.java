@@ -37,6 +37,7 @@ public class Robot extends TimedRobot
   private Drivetrain drivetrain;
   private Intake intake;  
   private Flywheel flywheel;
+  private Lift lift;
 
   private XboxController controller;
   /**
@@ -56,12 +57,14 @@ public class Robot extends TimedRobot
     drivetrain = new Drivetrain(new TalonSRX(Constants.frontLeftMotor), new TalonSRX(Constants.backLeftMotor), new TalonSRX(Constants.topLeftMotor), new TalonSRX(Constants.frontRightMotor), new TalonSRX(Constants.backRightMotor), new TalonSRX(Constants.topRightMotor));
     intake = new Intake(new TalonFX(Constants.intakeMaster), new TalonFX(Constants.intakeSlave));
     flywheel = new Flywheel(new TalonFX(Constants.flywheelMaster), new TalonFX(Constants.flywheelSlave));
+    lift = new Lift(new TalonFX(Constants.liftMaster), new TalonFX(Constants.liftSlave));
 
     controller = new XboxController(0);
 
     drivetrain.init();
     intake.init();
     flywheel.init();
+    lift.init();
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -120,9 +123,10 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
-    drivetrain.controlStraight2StickVelocity(controller.getY(Hand.kLeft), controller.getY(Hand.kRight));
+    drivetrain.controlStraight2StickVelocity(controller);
     //drivetrain.controlStraight2StickGyro(controller);
     intake.controlIntake(controller);
+    lift.controlLift(controller);
   }
 
   /**

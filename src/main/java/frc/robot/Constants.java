@@ -3,6 +3,7 @@ package frc.robot;
 class Constants
 {
     /*S T A R T  M O T O R  C O N S T A N T S*/
+
     public static final int frontLeftMotor = 6;
 
     public static final int backLeftMotor = 5;
@@ -22,6 +23,10 @@ class Constants
     public static final int intakeMaster = 0;
 
     public static final int intakeSlave = 0;
+
+    public static final int liftMaster = 0;
+
+    public static final int liftSlave = 0;
 
     /*E N D  M O T O R  C O N S T A N T S*/
 
@@ -50,4 +55,14 @@ class Constants
     public static final double velocKdFly = 0;
 
     public static final double velocKfFly = .042;
+
+    /*L I F T  C O N S T A N T S*/
+
+    public static final double posKpLift = 0;
+
+    public static final double posKiLift = 0;
+
+    public static final double posKdLift = 0;
+
+    public static final double posKfLift = .042;
 }
