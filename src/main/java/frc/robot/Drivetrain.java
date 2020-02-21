@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
 
@@ -95,7 +94,7 @@ public class Drivetrain
         leftTop.set(ControlMode.PercentOutput, 0);
     }
 
-    public void control1Stick(XboxController controller)
+    public void controlFallback1Stick(XboxController controller)
     {
         double joyY = controller.getY(Hand.kRight);
         double joyX = controller.getX(Hand.kRight);
@@ -141,56 +140,6 @@ public class Drivetrain
                 targetUPer100ms = (((joyLeft)) * 5330 * 80) / 600;
                 setSideVeloc('r', targetUPer100ms);
                 setSideVeloc('l', targetUPer100ms);
-            }
-            else
-            {
-                setSidePower('r', joyRight);
-                setSidePower('l', joyLeft);
-            }
-        }
-    }
-
-    public void controlStraight2StickGyro(XboxController controller)
-    {
-        joyRight = controller.getY(Hand.kRight);
-        joyLeft = controller.getY(Hand.kLeft);
-        if(Math.abs(joyRight) < .2 && Math.abs(joyLeft) < .2)
-        {
-            stopAll();
-        }
-        else
-        {
-            if(Math.abs(joyLeft - joyRight) < .15)
-            {
-                gyro.reset();
-                final double turnKp = .02;
-                double lPower;
-                double rPower;
-                while(Math.abs(joyLeft - joyRight) < .1)
-                {
-                    joyRight = controller.getY(Hand.kRight);
-                    joyLeft = controller.getY(Hand.kLeft);
-                    if(gyro.getAngle() > 1)
-                    {
-                        lPower = (joyLeft + joyRight) / 2 - (gyro.getAngle() * turnKp);
-                        rPower = ((joyLeft + joyRight) / 2);
-                    }
-                    else if(gyro.getAngle() < -1)
-                    {
-                        lPower = (joyLeft + joyRight) / 2;
-                        rPower = ((joyLeft + joyRight) / 2) - (gyro.getAngle() * turnKp);
-                    }
-                    else
-                    {
-                        lPower = (joyLeft + joyRight) / 2;
-                        rPower = (joyLeft + joyRight) / 2;
-                    }
-                    SmartDashboard.putNumber("Gyro: ", gyro.getAngle());
-                    SmartDashboard.putNumber("lPower: ", lPower);
-                    SmartDashboard.putNumber("rPower: ", rPower);
-                    setSidePower('r', rPower);
-                    setSidePower('l', lPower);
-                }
             }
             else
             {

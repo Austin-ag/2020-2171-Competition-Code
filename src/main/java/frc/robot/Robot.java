@@ -16,7 +16,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import frc.robot.Drivetrain;
 
@@ -125,8 +124,9 @@ public class Robot extends TimedRobot
   {
     drivetrain.controlStraight2StickVelocity(controller);
     //drivetrain.controlStraight2StickGyro(controller);
-    intake.controlIntake(controller);
-    lift.controlLift(controller);
+    //intake.controlIntake(controller);
+    //lift.controlLift(controller);
+    flywheel.flyWheelTest(controller);
   }
 
   /**
@@ -135,6 +135,6 @@ public class Robot extends TimedRobot
   @Override
   public void testPeriodic() 
   {
-
+    
   }
 }

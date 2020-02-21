@@ -16,9 +16,9 @@ class Constants
 
     public static final int topRightMotor = 1;
 
-    public static final int flywheelMaster = 0;
+    public static final int flywheelMaster = 7;
 
-    public static final int flywheelSlave = 0;
+    public static final int flywheelSlave = 8;
 
     public static final int intakeMaster = 0;
 
@@ -44,17 +44,17 @@ class Constants
 
     public static final double velocKdDrive = 0;
 
-    public static final double velocKfDrive = 1.30;
+    public static final double velocKfDrive = 1.44;
 
     /*F L Y W H E E L  C O N S T A N S T S*/
 
-    public static final double velocKpFly = 0;
+    public static final double velocKpFly = .015;
 
     public static final double velocKiFly = 0;
 
     public static final double velocKdFly = 0;
 
-    public static final double velocKfFly = .042;
+    public static final double velocKfFly = .047;//NEVER change this
 
     /*L I F T  C O N S T A N T S*/
 
@@ -64,5 +64,5 @@ class Constants
 
     public static final double posKdLift = 0;
 
-    public static final double posKfLift = .042;
+    public static final double posKfLift = .047;
 }
