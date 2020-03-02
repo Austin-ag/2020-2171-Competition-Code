@@ -22,11 +22,11 @@ class Constants
 
     public static final int intakeMaster = 0;
 
-    public static final int intakeSlave = 0;
-
     public static final int liftMaster = 0;
 
     public static final int liftSlave = 0;
+
+    public static final int index = 0;
 
     /*E N D  M O T O R  C O N S T A N T S*/
 
@@ -38,13 +38,13 @@ class Constants
 
     /*D R I V E  T R A I N  C O N S T A N S T S*/
 
-    public static final double velocKpDrive = 0;
+    public static final double velocKpDrive = .015;
 
     public static final double velocKiDrive = 0;
 
     public static final double velocKdDrive = 0;
 
-    public static final double velocKfDrive = 1.44;
+    public static final double velocKfDrive = 1.30;//NEVER CHANGE THIS
 
     /*F L Y W H E E L  C O N S T A N S T S*/
 
@@ -54,7 +54,7 @@ class Constants
 
     public static final double velocKdFly = 0;
 
-    public static final double velocKfFly = .047;//NEVER change this
+    public static final double velocKfFly = .049;//NEVER change this
 
     /*L I F T  C O N S T A N T S*/
 
@@ -64,5 +64,5 @@ class Constants
 
     public static final double posKdLift = 0;
 
-    public static final double posKfLift = .047;
+    public static final double posKfLift = .049;
 }

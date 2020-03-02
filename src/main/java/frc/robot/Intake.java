@@ -9,59 +9,79 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Solenoid;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
  * Add your docs here.
  */
 public class Intake 
 {
-    private TalonFX intakeMaster;
-    private TalonFX intakeSlave;
+    private Talon intakeMaster;
 
-    public Intake(TalonFX intakeMaster, TalonFX intakeSlave)
+    private Solenoid intake;
+
+    public Intake(Talon intakeMaster)
     {
         this.intakeMaster = intakeMaster;
-        this.intakeSlave = intakeSlave;
     }
 
     public void init()
     {
-        intakeSlave.follow(intakeMaster);
-        return;
+        setIntake("off");
     }
 
     public void setIntake(String mode)
     {
         if(mode == "in")
         {
-            intakeMaster.set(ControlMode.PercentOutput, 1);
+            intakeMaster.set(.75);
         }
         else if(mode == "out")
         {
-            intakeMaster.set(ControlMode.PercentOutput, -1);
+            intakeMaster.set(-.75);
         }
-        else if(mode == "stop")
+        else if(mode == "off")
         {
-            intakeMaster.set(ControlMode.PercentOutput, 0);
+            intakeMaster.set(0);
+        }
+    }
+
+    public void moveIntake(String pos)
+    {
+        if(pos == "in")
+        {
+            intake.set(true);
+        }
+        else if(pos == "out")
+        {
+            intake.set(false);
         }
     }
 
     public void controlIntake(XboxController controller)
     {
-        if(controller.getAButton())
+        if(controller.getAButton())//ASK DRIVERS WHAT BUTTONS THEY WANT
         {
             setIntake("in");
         }
-        else if(controller.getYButton())
+        else if(controller.getYButton())//ASK DRIVERS WHAT BUTTONS THEY WANT
         {
             setIntake("out");
         }
         else
         {
             setIntake("off");
+        }
+
+        if(controller.getAButton())//ASK DRIVERS WHAT BUTTONS THEY WANT
+        {
+            moveIntake("in");
+        }
+        else if(controller.getAButton())//ASK DRIVERS WHAT BUTTONS THEY WANT
+        {
+            moveIntake("out");
         }
     }
 }

@@ -9,15 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import edu.wpi.first.wpilibj.Talon;
+
+import edu.wpi.first.wpilibj.Compressor;
 
 import edu.wpi.first.wpilibj.XboxController;
-
-import frc.robot.Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,42 +26,38 @@ import frc.robot.Drivetrain;
  */
 public class Robot extends TimedRobot 
 {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
   private Drivetrain drivetrain;
   private Intake intake;  
   private Flywheel flywheel;
-  private Lift lift;
+  private Index index;
 
-  private XboxController controller;
+  private Compressor compressor;
+
+  private XboxController driveController;
+  private XboxController nonDriveController;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
 
-
-
   @Override
   public void robotInit() 
   {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-
     drivetrain = new Drivetrain(new TalonSRX(Constants.frontLeftMotor), new TalonSRX(Constants.backLeftMotor), new TalonSRX(Constants.topLeftMotor), new TalonSRX(Constants.frontRightMotor), new TalonSRX(Constants.backRightMotor), new TalonSRX(Constants.topRightMotor));
-    intake = new Intake(new TalonFX(Constants.intakeMaster), new TalonFX(Constants.intakeSlave));
+    intake = new Intake(new Talon(Constants.intakeMaster));
     flywheel = new Flywheel(new TalonFX(Constants.flywheelMaster), new TalonFX(Constants.flywheelSlave));
-    lift = new Lift(new TalonFX(Constants.liftMaster), new TalonFX(Constants.liftSlave));
+    index = new Index(new Talon(Constants.index));
+    compressor = new Compressor();
 
-    controller = new XboxController(0);
+    driveController = new XboxController(0);
+    nonDriveController = new XboxController(1);
 
     drivetrain.init();
     intake.init();
     flywheel.init();
-    lift.init();
+    index.init();
+
+    compressor.stop();
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -93,9 +87,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit() 
   {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+
   }
 
   /**
@@ -104,16 +96,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousPeriodic() 
   {
-    switch (m_autoSelected) 
-    {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+
   }
 
   /**
@@ -122,11 +105,11 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
-    drivetrain.controlStraight2StickVelocity(controller);
-    //drivetrain.controlStraight2StickGyro(controller);
-    //intake.controlIntake(controller);
-    //lift.controlLift(controller);
-    flywheel.flyWheelTest(controller);
+    drivetrain.controlStraight2StickVelocity(driveController);
+    //lift.controlLift(nonDriveController);
+    flywheel.controlFlywheel(nonDriveController);
+    index.controlIndex(nonDriveController);
+    intake.controlIntake(nonDriveController);
   }
 
   /**

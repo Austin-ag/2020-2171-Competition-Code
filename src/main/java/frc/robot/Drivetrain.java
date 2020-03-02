@@ -60,8 +60,10 @@ public class Drivetrain
         rightTop.config_kD(Constants.PIDSlotID, Constants.velocKdDrive, Constants.timeoutMS);
         rightTop.config_kF(Constants.PIDSlotID, Constants.velocKfDrive, Constants.timeoutMS);
 
-        gyro.calibrate();
-        gyro.reset();       
+        //gyro.calibrate();
+        //gyro.reset();    
+        
+        stopAll();
     }
 
     public void setSidePower(char side, double power)
@@ -76,15 +78,20 @@ public class Drivetrain
         }
     }
 
-    public void setSideVeloc(char side, double velocUPer100ms)
+    public double getRPMToU100Ms(double RPM)
+    {
+        return RPM * .1333 ;//.1333 is composed of (80 u / 60 s / 1000 ms * 100)
+    }
+
+    public void setSideVeloc(char side, double RPM)
     {
         if(side == 'l')
         {
-            leftTop.set(ControlMode.Velocity, -velocUPer100ms);
+            leftTop.set(ControlMode.Velocity, -getRPMToU100Ms(RPM));
         }
         else if(side == 'r')
         {
-            rightTop.set(ControlMode.Velocity, velocUPer100ms);
+            rightTop.set(ControlMode.Velocity, getRPMToU100Ms(RPM));
         }
     }
 
@@ -92,21 +99,6 @@ public class Drivetrain
     {
         rightTop.set(ControlMode.PercentOutput, 0);
         leftTop.set(ControlMode.PercentOutput, 0);
-    }
-
-    public void controlFallback1Stick(XboxController controller)
-    {
-        double joyY = controller.getY(Hand.kRight);
-        double joyX = controller.getX(Hand.kRight);
-        if(Math.abs(joyY) < .2 && Math.abs(joyX) < .2)
-        {
-            stopAll();
-        }
-        else
-        {
-            setSidePower('l', (joyY - joyX)/1.2);
-            setSidePower('r', (joyY + joyX)/1.2);
-        }
     }
 
     public void controlFallback2Stick(XboxController controller)
@@ -126,7 +118,6 @@ public class Drivetrain
 
     public void controlStraight2StickVelocity(XboxController controller)
     {
-        double targetUPer100ms;
         joyRight = controller.getY(Hand.kRight);
         joyLeft = controller.getY(Hand.kLeft);
         if(Math.abs(joyRight) < .2 && Math.abs(joyLeft) < .2)
@@ -135,11 +126,10 @@ public class Drivetrain
         }
         else
         {
-            if(Math.abs(joyLeft - joyRight) < .20)
+            if(Math.abs(joyLeft - joyRight) < .3)
             {
-                targetUPer100ms = (((joyLeft)) * 5330 * 80) / 600;
-                setSideVeloc('r', targetUPer100ms);
-                setSideVeloc('l', targetUPer100ms);
+                setSideVeloc('r', joyLeft * 5330);
+                setSideVeloc('l', joyLeft * 5330);
             }
             else
             {

@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Flywheel 
 {
+    private int targetRPM = 0;
+
     private TalonFX flywheel1;
     private TalonFX flywheel2;
 
@@ -40,31 +42,89 @@ public class Flywheel
         flywheel1.setSensorPhase(true);
 
         flywheel2.follow(flywheel1);
-        flywheel2.setInverted(false);
+        flywheel2.setInverted(true);
+
+        setFyWheelVelocity(0);
     }
 
     public double getRPMToU100Ms(int RPM)
     {
-        return RPM * 34.13;//34.13 is composed of (2048 u / 60 s / 1000 ms * 100)
+        return RPM * -34.13;//34.13 is composed of (2048 u / 60 s / 1000 ms * 100)
     }
 
     public void setFyWheelVelocity(int RPM)
     {
-        flywheel1.set(ControlMode.Velocity, getRPMToU100Ms(RPM));
-    }
-
-    public void flyWheelTest(XboxController controller)
-    {
-        if(Math.abs(controller.getY(Hand.kRight)) < .15)
+        if(RPM == 0)
         {
             flywheel1.set(ControlMode.PercentOutput, 0);
         }
         else
         {
+            flywheel1.set(ControlMode.Velocity, getRPMToU100Ms(RPM));
+        }
+    }
 
-            flywheel1.set(ControlMode.Velocity, 20000);
-            SmartDashboard.putNumber("Master", flywheel1.getSelectedSensorVelocity());
-            SmartDashboard.putNumber("Slave: ", flywheel2.getSelectedSensorVelocity());
+    public void controlFlywheel(XboxController controller)//ASK DRIVERS WHAT BUTTONS THEY WANT
+    {
+       if(controller.getYButton())
+        {
+             targetRPM += 586;
+        }
+        else if(controller.getAButton())
+        {
+            targetRPM -= 586;
+        }
+        if(targetRPM > 6500)
+        {
+            targetRPM = 6500;
+        }
+        else if(targetRPM < 5328)
+        {
+            targetRPM = 5328;
+        }
+        SmartDashboard.putNumber("Master U/100ms: ", -1* flywheel1.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Master RPMS: ", -1 *(flywheel1.getSelectedSensorVelocity()*600)/2048);
+        SmartDashboard.putNumber("Slave U/100s: ", -1 *flywheel2.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Slave RPMS: ", -1 *(flywheel2.getSelectedSensorVelocity()*600)/2048);
+        SmartDashboard.putNumber("Target U/100ms: ", getRPMToU100Ms(targetRPM));
+        SmartDashboard.putNumber("Target RPM: ", targetRPM);
+        setFyWheelVelocity(targetRPM);
+    }
+
+
+    public void flyWheelTest(XboxController controller)
+    {
+        int target = 0;
+        if(Math.abs(controller.getY(Hand.kRight)) < .15)
+        {
+            setFyWheelVelocity(0);
+        }
+        else
+        {
+            if(controller.getAButton())
+            {
+                target = 1000;
+            }
+            else if(controller.getBButton())
+            {
+                target = 2000;
+            }
+            else if(controller.getYButton())
+            {
+                target = 3250;
+            }
+            else if(controller.getXButton())
+            {
+                target = 6500;
+            }
+            else if(controller.getStartButton())
+            {
+                target = 0;
+            }
+
+            setFyWheelVelocity(target);
+
+            
         }
     }
 }
