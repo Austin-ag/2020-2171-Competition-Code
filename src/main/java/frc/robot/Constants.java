@@ -20,7 +20,7 @@ class Constants
 
     public static final int flywheelSlave = 8;
 
-    public static final int intakeMaster = 0;
+    public static final int intake = 1;
 
     public static final int liftMaster = 0;
 
@@ -38,13 +38,15 @@ class Constants
 
     /*D R I V E  T R A I N  C O N S T A N S T S*/
 
-    public static final double velocKpDrive = .015;
+    public static final double velocKpDrive = 1;
 
     public static final double velocKiDrive = 0;
 
     public static final double velocKdDrive = 0;
 
-    public static final double velocKfDrive = 1.30;//NEVER CHANGE THIS
+    public static final double velocKfDriveleft = 1.405;
+
+    public static final double velocKfDriveright = 1.271;
 
     /*F L Y W H E E L  C O N S T A N S T S*/
 

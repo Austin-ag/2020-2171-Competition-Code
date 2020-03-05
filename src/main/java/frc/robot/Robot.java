@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Compressor;
 
 import edu.wpi.first.wpilibj.XboxController;
 
+import io.github.pseudoresonance.pixy2api.Pixy2;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -34,7 +36,9 @@ public class Robot extends TimedRobot
   private Compressor compressor;
 
   private XboxController driveController;
-  private XboxController nonDriveController;
+
+  Pixy2 camera;
+  //private XboxController nonDriveController;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -43,14 +47,15 @@ public class Robot extends TimedRobot
   @Override
   public void robotInit() 
   {
+    camera = new Pixy2(SPI);
     drivetrain = new Drivetrain(new TalonSRX(Constants.frontLeftMotor), new TalonSRX(Constants.backLeftMotor), new TalonSRX(Constants.topLeftMotor), new TalonSRX(Constants.frontRightMotor), new TalonSRX(Constants.backRightMotor), new TalonSRX(Constants.topRightMotor));
-    intake = new Intake(new Talon(Constants.intakeMaster));
+    intake = new Intake(new Talon(Constants.intake));
     flywheel = new Flywheel(new TalonFX(Constants.flywheelMaster), new TalonFX(Constants.flywheelSlave));
     index = new Index(new Talon(Constants.index));
     compressor = new Compressor();
 
     driveController = new XboxController(0);
-    nonDriveController = new XboxController(1);
+    //nonDriveController = new XboxController(1);
 
     drivetrain.init();
     intake.init();
@@ -106,10 +111,10 @@ public class Robot extends TimedRobot
   public void teleopPeriodic()
   {
     drivetrain.controlStraight2StickVelocity(driveController);
-    //lift.controlLift(nonDriveController);
+    /*lift.controlLift(nonDriveController);
     flywheel.controlFlywheel(nonDriveController);
     index.controlIndex(nonDriveController);
-    intake.controlIntake(nonDriveController);
+    intake.controlIntake(nonDriveController);*/
   }
 
   /**
