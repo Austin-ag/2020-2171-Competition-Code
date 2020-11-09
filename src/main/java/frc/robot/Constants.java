@@ -22,11 +22,15 @@ class Constants
 
     public static final int intake = 1;
 
-    public static final int liftMaster = 0;
+    public static final int liftMaster = 2;
 
-    public static final int liftSlave = 0;
+    public static final int liftSlave = 3;
 
     public static final int index = 0;
+
+    public static final int intakeIn = 0;
+
+    public static final int intakeOut= 1;
 
     /*E N D  M O T O R  C O N S T A N T S*/
 

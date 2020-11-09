@@ -66,11 +66,11 @@ public class Flywheel
 
     public void controlFlywheel(XboxController controller)//ASK DRIVERS WHAT BUTTONS THEY WANT
     {
-       if(controller.getYButton())
+       if(controller.getBButtonPressed())
         {
              targetRPM += 586;
         }
-        else if(controller.getAButton())
+        else if(controller.getXButtonPressed())
         {
             targetRPM -= 586;
         }

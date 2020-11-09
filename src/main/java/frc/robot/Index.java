@@ -43,13 +43,13 @@ public class Index
         }
     }
 
-    public void controlIndex(XboxController controller)//ASK DRIVERS WHAT BUTTONS THEY WANT
+    public void controlIndex(XboxController controller)
     {
-        if(controller.getPOV(0) == 0)
+        if(controller.getYButton())
         {
             setIndex("in");
         }
-        else if(controller.getPOV(0) == 180)
+        else if(controller.getAButton())
         {
             setIndex("out");
         }

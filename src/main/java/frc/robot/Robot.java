@@ -14,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Talon;
 
 import edu.wpi.first.wpilibj.Compressor;
-
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.XboxController;
 
 import io.github.pseudoresonance.pixy2api.Pixy2;
@@ -32,6 +32,7 @@ public class Robot extends TimedRobot
   private Intake intake;  
   private Flywheel flywheel;
   private Index index;
+  private Lift lift;
 
   private Compressor compressor;
 
@@ -47,19 +48,23 @@ public class Robot extends TimedRobot
   @Override
   public void robotInit() 
   {
-    camera = new Pixy2(SPI);
+    camera = Pixy2.createInstance(Pixy2.LinkType.SPI);
+
     drivetrain = new Drivetrain(new TalonSRX(Constants.frontLeftMotor), new TalonSRX(Constants.backLeftMotor), new TalonSRX(Constants.topLeftMotor), new TalonSRX(Constants.frontRightMotor), new TalonSRX(Constants.backRightMotor), new TalonSRX(Constants.topRightMotor));
-    intake = new Intake(new Talon(Constants.intake));
+    intake = new Intake(new Talon(Constants.intake), new DoubleSolenoid(Constants.intakeIn, Constants.intakeOut));
     flywheel = new Flywheel(new TalonFX(Constants.flywheelMaster), new TalonFX(Constants.flywheelSlave));
     index = new Index(new Talon(Constants.index));
+    lift  = new Lift(new Talon(Constants.liftMaster), new Talon(Constants.liftSlave));
     compressor = new Compressor();
 
     driveController = new XboxController(0);
     //nonDriveController = new XboxController(1);
 
+    camera.init();
     drivetrain.init();
     intake.init();
     flywheel.init();
+    lift.init();
     index.init();
 
     compressor.stop();
@@ -110,11 +115,42 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+    /*S T A R T  C O N T R O L  D O C U M E N T A T I O N
+        For Drivetrain:
+          Left stick Y-axis controls forward and back
+          Right stick X-axis controls turning
+          NOTE: Driving straight probably isn't tuned perfectly right now, so you will probably have to do make some adjustions using the right stick
+        For Intake
+          Holding Left trigger > 20% turns intake in
+          Holding Left bumper turns intake out
+          Turning in takes priority if both buttons are held
+        For Indexer
+          Holding Y turns indexer in
+          Holding A turns indexer out
+          Turning in takes priority if both buttons are held
+        For Flywheel
+          Pressing B Speeds up ~580 RPM
+          Pressing X slows down ~580 RPM
+          Lower limit on RPM is ~5300, upper limit is ~6500
+          I WOULD NOT USE THE FLYWHEEL RIGHT NOW, THERE ARE SOME ISSUES SURROUNDING THE FLOW OF THE PROGRAM AROUND ADJUSTING RPM PROPERLY
+      E N D  C O N T R O L  D O C U M E N T A T I O N*/
+
+
+
+
     drivetrain.controlStraight2StickVelocity(driveController);
-    /*lift.controlLift(nonDriveController);
-    flywheel.controlFlywheel(nonDriveController);
-    index.controlIndex(nonDriveController);
-    intake.controlIntake(nonDriveController);*/
+    //lift.controlLift(nonDriveController);
+    //flywheel.controlFlywheel(nonDriveController);
+    index.controlIndex(driveController);
+    intake.controlIntake(driveController);
+    if(driveController.getStartButton())
+    {
+      compressor.start();
+    }
+    else if(driveController.getBackButton())
+    {
+      compressor.stop();
+    }
   }
 
   /**

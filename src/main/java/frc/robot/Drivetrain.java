@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+//1
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -64,8 +64,8 @@ public class Drivetrain
         rightTop.config_kD(Constants.PIDSlotID, Constants.velocKdDrive, Constants.timeoutMS);
         rightTop.config_kF(Constants.PIDSlotID, Constants.velocKfDriveright, Constants.timeoutMS);
 
-        //gyro.calibrate();
-        //gyro.reset();    
+        gyro.calibrate();
+        gyro.reset();    
         
         stopAll();
     }
